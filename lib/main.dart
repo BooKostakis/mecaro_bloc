@@ -5,7 +5,8 @@ import 'app.dart';
 
 void main() => runApp(
       BlocProvider(
-        create: (context) => DataCubit(),
+        create: (context) => DataCubit()..readBinaryFile(),
+        lazy: false,
         child: const App(),
       ),
     );

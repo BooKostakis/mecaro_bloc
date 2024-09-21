@@ -1,13 +1,19 @@
-abstract class DataState {}
+part of 'data_cubit.dart';
 
-class DataInitial extends DataState {}
-
-class DataLoaded extends DataState {
-  final String data;
-  DataLoaded({required this.data});
+enum DataStateStatus {
+  initial,
+  parsingStarted,
+  parsingStopped,
+  parsingResumed,
+  parsingFinished,
+  // error
 }
 
-class DataError extends DataState {
-  final String message;
-  DataError({required this.message});
+@freezed
+class DataState with _$DataState {
+  const factory DataState.initial({
+    DataStateStatus? status,
+    List<String>? lines,
+    // String? errorMessage,
+  }) = _DataStateInitial;
 }
