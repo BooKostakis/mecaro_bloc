@@ -16,22 +16,28 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DataState {
-  DataStateStatus? get status => throw _privateConstructorUsedError;
-  List<String>? get lines => throw _privateConstructorUsedError;
+  ConnectionStatus? get status => throw _privateConstructorUsedError;
+  List<String> get lines => throw _privateConstructorUsedError;
+  ByteData? get bytes => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DataStateStatus? status, List<String>? lines)
+    required TResult Function(
+            ConnectionStatus? status, List<String> lines, ByteData? bytes)
         initial,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DataStateStatus? status, List<String>? lines)? initial,
+    TResult? Function(
+            ConnectionStatus? status, List<String> lines, ByteData? bytes)?
+        initial,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DataStateStatus? status, List<String>? lines)? initial,
+    TResult Function(
+            ConnectionStatus? status, List<String> lines, ByteData? bytes)?
+        initial,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -64,7 +70,7 @@ abstract class $DataStateCopyWith<$Res> {
   factory $DataStateCopyWith(DataState value, $Res Function(DataState) then) =
       _$DataStateCopyWithImpl<$Res, DataState>;
   @useResult
-  $Res call({DataStateStatus? status, List<String>? lines});
+  $Res call({ConnectionStatus? status, List<String> lines, ByteData? bytes});
 }
 
 /// @nodoc
@@ -83,17 +89,22 @@ class _$DataStateCopyWithImpl<$Res, $Val extends DataState>
   @override
   $Res call({
     Object? status = freezed,
-    Object? lines = freezed,
+    Object? lines = null,
+    Object? bytes = freezed,
   }) {
     return _then(_value.copyWith(
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as DataStateStatus?,
-      lines: freezed == lines
+              as ConnectionStatus?,
+      lines: null == lines
           ? _value.lines
           : lines // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
+      bytes: freezed == bytes
+          ? _value.bytes
+          : bytes // ignore: cast_nullable_to_non_nullable
+              as ByteData?,
     ) as $Val);
   }
 }
@@ -106,7 +117,7 @@ abstract class _$$DataStateInitialImplCopyWith<$Res>
       __$$DataStateInitialImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DataStateStatus? status, List<String>? lines});
+  $Res call({ConnectionStatus? status, List<String> lines, ByteData? bytes});
 }
 
 /// @nodoc
@@ -123,17 +134,22 @@ class __$$DataStateInitialImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = freezed,
-    Object? lines = freezed,
+    Object? lines = null,
+    Object? bytes = freezed,
   }) {
     return _then(_$DataStateInitialImpl(
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as DataStateStatus?,
-      lines: freezed == lines
+              as ConnectionStatus?,
+      lines: null == lines
           ? _value._lines
           : lines // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
+      bytes: freezed == bytes
+          ? _value.bytes
+          : bytes // ignore: cast_nullable_to_non_nullable
+              as ByteData?,
     ));
   }
 }
@@ -141,24 +157,27 @@ class __$$DataStateInitialImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DataStateInitialImpl implements _DataStateInitial {
-  const _$DataStateInitialImpl({this.status, final List<String>? lines})
+  const _$DataStateInitialImpl(
+      {this.status, final List<String> lines = const [], this.bytes})
       : _lines = lines;
 
   @override
-  final DataStateStatus? status;
-  final List<String>? _lines;
+  final ConnectionStatus? status;
+  final List<String> _lines;
   @override
-  List<String>? get lines {
-    final value = _lines;
-    if (value == null) return null;
+  @JsonKey()
+  List<String> get lines {
     if (_lines is EqualUnmodifiableListView) return _lines;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_lines);
   }
 
   @override
+  final ByteData? bytes;
+
+  @override
   String toString() {
-    return 'DataState.initial(status: $status, lines: $lines)';
+    return 'DataState.initial(status: $status, lines: $lines, bytes: $bytes)';
   }
 
   @override
@@ -167,12 +186,13 @@ class _$DataStateInitialImpl implements _DataStateInitial {
         (other.runtimeType == runtimeType &&
             other is _$DataStateInitialImpl &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality().equals(other._lines, _lines));
+            const DeepCollectionEquality().equals(other._lines, _lines) &&
+            (identical(other.bytes, bytes) || other.bytes == bytes));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, status, const DeepCollectionEquality().hash(_lines));
+      runtimeType, status, const DeepCollectionEquality().hash(_lines), bytes);
 
   /// Create a copy of DataState
   /// with the given fields replaced by the non-null parameter values.
@@ -186,28 +206,33 @@ class _$DataStateInitialImpl implements _DataStateInitial {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DataStateStatus? status, List<String>? lines)
+    required TResult Function(
+            ConnectionStatus? status, List<String> lines, ByteData? bytes)
         initial,
   }) {
-    return initial(status, lines);
+    return initial(status, lines, bytes);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DataStateStatus? status, List<String>? lines)? initial,
+    TResult? Function(
+            ConnectionStatus? status, List<String> lines, ByteData? bytes)?
+        initial,
   }) {
-    return initial?.call(status, lines);
+    return initial?.call(status, lines, bytes);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DataStateStatus? status, List<String>? lines)? initial,
+    TResult Function(
+            ConnectionStatus? status, List<String> lines, ByteData? bytes)?
+        initial,
     required TResult orElse(),
   }) {
     if (initial != null) {
-      return initial(status, lines);
+      return initial(status, lines, bytes);
     }
     return orElse();
   }
@@ -243,13 +268,16 @@ class _$DataStateInitialImpl implements _DataStateInitial {
 
 abstract class _DataStateInitial implements DataState {
   const factory _DataStateInitial(
-      {final DataStateStatus? status,
-      final List<String>? lines}) = _$DataStateInitialImpl;
+      {final ConnectionStatus? status,
+      final List<String> lines,
+      final ByteData? bytes}) = _$DataStateInitialImpl;
 
   @override
-  DataStateStatus? get status;
+  ConnectionStatus? get status;
   @override
-  List<String>? get lines;
+  List<String> get lines;
+  @override
+  ByteData? get bytes;
 
   /// Create a copy of DataState
   /// with the given fields replaced by the non-null parameter values.

@@ -1,19 +1,16 @@
 part of 'data_cubit.dart';
 
-enum DataStateStatus {
-  initial,
-  parsingStarted,
-  parsingStopped,
-  parsingResumed,
-  parsingFinished,
-  // error
+enum ConnectionStatus {
+  connected,
+  disconnected,
 }
 
 @freezed
 class DataState with _$DataState {
   const factory DataState.initial({
-    DataStateStatus? status,
-    List<String>? lines,
+    ConnectionStatus? status,
+    @Default([]) List<String> lines,
+    ByteData? bytes,
     // String? errorMessage,
   }) = _DataStateInitial;
 }

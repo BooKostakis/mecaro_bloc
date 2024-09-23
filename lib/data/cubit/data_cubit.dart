@@ -10,68 +10,73 @@ class DataCubit extends Cubit<DataState> {
 
   Future<void> readBinaryFile() async {
     try {
-      // Получаем путь к файлу в assets
       final bytes = await rootBundle.load('assets/dataset.bin');
+      emit(state.copyWith(bytes: bytes));
+    } catch (e) {
+      // TODO: add error handling
+    }
+  }
 
-      for (int offset = 0; offset < bytes.lengthInBytes; offset += 16) {
-        await Future.delayed(const Duration(milliseconds: 1000));
-        int length = (offset + 16 <= bytes.lengthInBytes)
-            ? 16
-            : bytes.lengthInBytes - offset;
-        print('Chunk starting at byte $offset:');
+  void connect() async {
+    emit(
+      state.copyWith(status: ConnectionStatus.connected),
+    );
+    await readMessages();
+  }
 
-        String chunk = '';
-        for (int i = 0; i < length; i++) {
-          print(bytes.getUint8(offset + i));
+  void disconnect() {
+    emit(
+      state.copyWith(
+        status: ConnectionStatus.disconnected,
+        lines: [],
+      ),
+    );
+  }
 
-          chunk += String.fromCharCodes(bytes. .buffer.asUint8List());
-          print('Chunk теперь: $chunk');
-        }
+  Future<void> readMessages() async {
+    if (state.bytes == null) {
+      await readBinaryFile();
+    }
 
-        print('---');
+    if (state.bytes == null) {
+      return;
+    }
+
+    final bytes = state.bytes!;
+
+    String concatenatedChunk = '';
+
+    for (int offset = 0; offset < bytes.lengthInBytes; offset += 16) {
+      if (state.status == ConnectionStatus.disconnected) {
+        return;
+      }
+      await Future.delayed(const Duration(milliseconds: 500));
+      int length = (offset + 16 <= bytes.lengthInBytes)
+          ? 16
+          : bytes.lengthInBytes - offset;
+
+      List<int> chunk16bytes = [];
+      for (int i = 0; i < length; i++) {
+        chunk16bytes.add(bytes.getUint8(offset + i));
       }
 
-      // Преобразуем bytes в строку, чтобы было проще работать с данными.
-      final stringData = String.fromCharCodes(bytes.buffer.asUint8List());
-      // Теперь у нас есть stringData, которую можно парсить.
-      final lines = stringData
-          .replaceAll('\$', '\n\$')
-          .split('\n')
-          // Фильтруем строки, оставляя только те,
-          // которые начинаются на $ или на A-Z
-          .where((line) =>
-              line.startsWith('\$') &&
-              (line.length > 1 &&
-                  line[1].compareTo('A') >= 0 &&
-                  line[1].compareTo('Z') <= 0))
-          .toList();
-    } catch (e) {
-      // Обрабатываем ошибку при чтении файла
-      // emit(DataError(message: 'Ошибка при чтении файла: ${e.toString()}'));
+      concatenatedChunk += String.fromCharCodes(chunk16bytes);
+
+      final lineStartPosition = concatenatedChunk.indexOf('\$G');
+
+      final lineEndPosition = concatenatedChunk.indexOf('\n');
+
+      String line = '';
+
+      if (lineStartPosition == -1 && lineEndPosition != -1) {
+        concatenatedChunk = concatenatedChunk.replaceAll('\n', '');
+      }
+
+      if (lineStartPosition != -1 && lineEndPosition != -1) {
+        line = concatenatedChunk.substring(lineStartPosition, lineEndPosition);
+        emit(state.copyWith(lines: state.lines + [line]));
+        concatenatedChunk = concatenatedChunk.substring(lineEndPosition + 1);
+      }
     }
   }
 }
-
-
-
-
-// class DataCubit extends Cubit<DataState> {
-//   DataCubit() : super(DataInitial());
-
-//   Future<void> readBinaryFile() async {
-//     try {
-//       // Получаем путь к файлу в assets
-//       final bytes = await rootBundle.load('assets/dataset.bin');
-
-
-//       // Преобразуем bytes в строку, чтобы было проще работать с данными.
-//       final stringData = String.fromCharCodes(bytes.buffer.asUint8List());
-
-//       // Теперь у нас есть stringData, которую можно парсить.
-//       emit(DataLoaded(data: stringData));
-//     } catch (e) {
-//       // Обрабатываем ошибку при чтении файла
-//       emit(DataError(message: 'Ошибка при чтении файла: ${e.toString()}'));
-//     }
-//   }
-// }
